@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Employee Manager";
+}
+
+<h1>Empleados</h1>
+
+<div class=" card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-12 offset-md-9">
+                <button class="btn btn-primary" onclick="ShowNewEmployeeDialog()">Agregar</button>
+                <button class="btn btn-warning" onclick="">Modificar</button>
+                <button class="btn btn-danger" onclick="">Eliminar</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="tblEmployees" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Email</th>
+                    <th>Telefono</th>
+                    <th>Salario</th>
+                    <th>Fecha de Ingreso</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<div id="dlgNewEmployee" class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nuevo Empleado</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="txtName">Nombre</label>
+                            <input type="text" class="form-control" id="txtName" placeholder="Nombre">  
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="txtLastName">Apellido</label>
+                            <input type="text" class="form-control" id="txtLastName" placeholder="Apellido">  
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="txtEmail">Email</label>
+                            <input type="text" class="form-control" id="txtEmail" placeholder="Email">  
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="txtTelefono">Telefono</label>
+                            <input type="text" class="form-control" id="txtTelefono" placeholder="Telefono">  
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="txtSalary">Salario</label>
+                            <input type="number" step=".01" class="form-control" id="txtSalary" placeholder="Salario">  
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="txtDate">Fecha de ingreso</label>
+                            <input type="date" class="form-control" id="txtDate" placeholder="Fecha de ingreso">  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" onclick="AddEmployee()" >Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+        
