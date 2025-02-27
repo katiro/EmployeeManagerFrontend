@@ -10,7 +10,9 @@ namespace EmployeeManager.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly string EmployeeManagerApiUrl = "http://localhost:5017/";
+    private readonly string _EmployeeManagerApiUrl = "http://localhost:5017/";
+    private string _Email = "userTest@testmail.com";
+    private string _Password = "Pass@test01";
 
     public HomeController(ILogger<HomeController> logger)
     {
@@ -19,8 +21,6 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        Token token = Login("userTest@testmail.com", "Pass@test01");
-        GetEmployees(token.AccessToken);
         return View();
     }
 
@@ -44,7 +44,7 @@ public class HomeController : Controller
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(EmployeeManagerApiUrl);
+                client.BaseAddress = new Uri(_EmployeeManagerApiUrl);
 
                 var login = new Login
                 {
@@ -90,17 +90,18 @@ public class HomeController : Controller
     /// <param name="token"></param>
     /// <returns></returns>
     [HttpGet]
-    public JsonResult GetEmployees(string token)
+    public JsonResult GetEmployees()
     {
         JsonResult jsonResponse;
         try
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(EmployeeManagerApiUrl);
+                client.BaseAddress = new Uri(_EmployeeManagerApiUrl);
 
                 //Agregar token a la petición
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                Token token = Login(_Email, _Password);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
                 var responseTask = client.GetAsync("api/Empleados");
 
@@ -112,7 +113,7 @@ public class HomeController : Controller
                     var readTask = result.Content.ReadAsStringAsync();
                     readTask.Wait();
 
-                    jsonResponse = Json(new { employees = readTask.Result, msj = "" });
+                    jsonResponse = Json(new { employees = JsonSerializer.Deserialize<List<Empleado>>(readTask.Result), msj = "" });
                 }
                 else
                 {
@@ -137,17 +138,19 @@ public class HomeController : Controller
     /// <param name="token"></param>
     /// <returns></returns>
     [HttpPost]
-    public JsonResult CreateEmployee(Empleado employee, string token)
+    public JsonResult CreateEmployee(Empleado employee)
     {
         JsonResult jsonResponse;
         try
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(EmployeeManagerApiUrl);
+                client.BaseAddress = new Uri(_EmployeeManagerApiUrl);
 
                 //Agregar token a la petición
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                Token token = Login(_Email, _Password);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
                 var postTask = client.PostAsJsonAsync<Empleado>("api/Empleados", employee);
                 postTask.Wait();
@@ -178,17 +181,18 @@ public class HomeController : Controller
     /// <param name="employee"></param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public JsonResult UpdateEmployee(int id, Empleado employee, string token)
+    public JsonResult UpdateEmployee(int id, Empleado employee)
     {
         JsonResult jsonResponse;
         try
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(EmployeeManagerApiUrl);
+                client.BaseAddress = new Uri(_EmployeeManagerApiUrl);
 
                 //Agregar token a la petición
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                Token token = Login(_Email, _Password);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
                 var putTask = client.PutAsJsonAsync<Empleado>("api/Empleados/" + id , employee);
                 putTask.Wait();
@@ -219,17 +223,18 @@ public class HomeController : Controller
     /// <param name="id"></param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public JsonResult DeleteEmployee(int id, string token)
+    public JsonResult DeleteEmployee(int id)
     {
         JsonResult jsonResponse;
         try
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(EmployeeManagerApiUrl);
+                client.BaseAddress = new Uri(_EmployeeManagerApiUrl);
 
                 //Agregar token a la petición
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                Token token = Login(_Email, _Password);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
                 var deleteTask = client.DeleteAsync("api/Empleados" + id);
                 deleteTask.Wait();
